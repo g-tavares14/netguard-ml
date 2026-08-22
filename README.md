@@ -67,3 +67,7 @@ A implementação dos serviços começa somente depois que o pipeline de ML esti
 ## Documentação
 
 O planejamento completo, incluindo modelos, métricas, pipeline, explicabilidade e arquitetura de demonstração, está em [Escopo inicial do projeto](docs/escopo-inicial.md).
+
+## Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
