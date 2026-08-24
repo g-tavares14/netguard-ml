@@ -1,0 +1,1 @@
+Ver [AGENTS.md](AGENTS.md) — esse arquivo é a fonte de verdade sobre contexto do projeto, status atual, arquitetura planejada, princípios de ML e convenções de colaboração, usada por qualquer agente de IA (incluindo o Claude Code) que trabalhe neste repositório.
