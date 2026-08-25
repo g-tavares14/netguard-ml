@@ -44,4 +44,4 @@ O backend em TypeScript existe por separação de responsabilidades, não porque
 
 ## Escopo por ferramenta
 
-Este arquivo (`AGENTS.md`) é a fonte de verdade para qualquer agente de IA que trabalhe neste repositório. `CLAUDE.md` existe apenas como ponteiro para este arquivo, para compatibilidade com o Claude Code.
+Este arquivo (`AGENTS.md`) é a fonte de verdade para qualquer agente de IA que trabalhe neste repositório.
