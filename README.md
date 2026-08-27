@@ -13,7 +13,9 @@ O projeto prioriza uma evolução verificável: primeiro um pipeline de ML repro
 
 ## Problema
 
-Ataques podem alterar padrões de tráfego, como taxas de pacotes, volume de bytes, duração de conexões e taxas de erro. O NetGuard ML investigará se essas características permitem distinguir comportamento normal de comportamento sob ataque.
+Ataques podem alterar padrões de tráfego, como taxas de pacotes, volume de bytes, duração de conexões, taxas de erro e mensagens ICMP. O NetGuard ML investigará se essas características permitem distinguir comportamento normal de comportamento sob ataque.
+
+O Internet Control Message Protocol (ICMP) faz parte do escopo: é usado para relatório de erros de rede, diagnóstico (`ping` / `traceroute`) e também aparece em ataques como inundação por ping (ICMP flood). Features candidatas incluem tipo e código ICMP, taxa de echo request/reply, latência de ping e mensagens de erro ICMP. O target permanece binário (`normal` / `attack`); um tipo específico como ICMP flood só será exibido se o modelo tiver sido treinado e avaliado para isso.
 
 Accuracy não será usada isoladamente: o projeto dará atenção especial ao recall da classe `attack`, aos falsos negativos e aos falsos positivos.
 
@@ -59,7 +61,7 @@ flowchart LR
 
 ## Status atual
 
-- [ ] Selecionar e documentar um dataset público de tráfego de rede
+- [ ] Selecionar e documentar um dataset público de tráfego de rede, preferencialmente com tráfego ICMP e rótulos que permitam mapear ataques ICMP (ex.: ping flood) para a classe `attack`
 - [ ] Realizar análise exploratória e definir o target binário
 - [ ] Implementar preprocessing reproduzível
 - [ ] Treinar e avaliar o baseline com Decision Tree
@@ -155,6 +157,21 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 - [Roadmap de Data Engineering e AWS](docs/aws-roadmap.md): critérios e evolução planejada para Data Lake, batch, streaming e observabilidade.
 - [Diretrizes para agentes](AGENTS.md): regras de execução e ordem técnica do projeto.
 
+## Referências acadêmicas
+
+- https://aws.amazon.com/pt/what-is/icmp/
+- https://www.rfc-editor.org/rfc/rfc792
+- https://www.rfc-editor.org/rfc/rfc4443
+- https://www.unb.ca/cic/datasets/nsl.html
+- https://www.unb.ca/cic/datasets/ids-2017.html
+- https://www.unb.ca/cic/datasets/ids-2018.html
+- https://www.unb.ca/cic/datasets/ddos-2019.html
+- https://research.unsw.edu.au/projects/unsw-nb15-dataset
+- https://ieeexplore.ieee.org/document/10292643
+- https://www.sciencedirect.com/science/article/pii/S2665963826000096
+- https://www.tandfonline.com/doi/full/10.1080/03772063.2023.2208549
+- https://www.mdpi.com/2073-431x/14/7/282
+
 ## Próxima entrega
 
-`[Data] Select network traffic dataset`: selecionar uma fonte pública, avaliar seus rótulos, features, qualidade, distribuição de classes, timestamps e riscos de vazamento antes de definir o primeiro pipeline.
+`[Data] Select network traffic dataset`: selecionar uma fonte pública, avaliar seus rótulos, features (incluindo ICMP, se disponível), qualidade, distribuição de classes, timestamps e riscos de vazamento antes de definir o primeiro pipeline.

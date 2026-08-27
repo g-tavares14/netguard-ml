@@ -21,10 +21,14 @@ Possíveis atributos incluem:
 - latência e duração da conexão;
 - quantidade e taxa de pacotes;
 - bytes enviados e recebidos;
-- protocolo e portas utilizadas;
+- protocolo e portas utilizadas, incluindo ICMP;
+- tipo e código ICMP, taxa de echo request/reply e latência de ping;
+- mensagens de erro ICMP (destino inacessível, TTL excedido, fragmentação);
 - número ou taxa de conexões;
 - erros e retransmissões;
-- características específicas dos ataques representados.
+- características específicas dos ataques representados, inclusive ping flood / ICMP flood e Smurf, quando o dataset os rotular.
+
+A seleção deve preferir, quando possível, uma fonte que contenha tráfego ICMP e rótulos que permitam mapear ataques ICMP para a classe `attack`.
 
 Antes de definir a arquitetura de dados e os modelos, a análise exploratória deverá identificar:
 
@@ -36,7 +40,7 @@ Antes de definir a arquitetura de dados e os modelos, a análise exploratória d
 6. presença de timestamps e de uma ordenação temporal significativa;
 7. risco de vazamento de dados entre treino e teste.
 
-O target inicial será binário. Os diferentes tipos de ataque poderão ser agrupados na classe `attack`, desde que os rótulos do dataset permitam esse mapeamento de forma clara e documentada.
+O target inicial será binário. Os diferentes tipos de ataque, inclusive ping flood / ICMP flood, poderão ser agrupados na classe `attack`, desde que os rótulos do dataset permitam esse mapeamento de forma clara e documentada. Um tipo específico de ataque ICMP só deverá aparecer na saída se o modelo tiver sido treinado e avaliado para isso.
 
 > Janelas temporais somente serão implementadas se a estrutura do dataset representar uma sequência temporal real. A ordem das linhas, isoladamente, não será tratada como tempo.
 
@@ -94,7 +98,8 @@ Se o dataset permitir, eventos individuais serão agregados em janelas de tempo.
 - contagem e taxa de pacotes;
 - total de bytes recebidos e enviados;
 - quantidade ou taxa de conexões;
-- taxa de erros e retransmissões.
+- taxa de erros e retransmissões;
+- taxa de pacotes ICMP e de echo request/reply, se o dataset representar ICMP.
 
 Esse mecanismo muda a pergunta de “este evento parece um ataque?” para “o comportamento da rede nos últimos N segundos é compatível com um ataque?”.
 
@@ -208,7 +213,7 @@ O artefato exportado deverá carregar junto, ou referenciar de forma versionada,
 
 ## 9. Demonstração em tempo real
 
-Após a validação do modelo, um simulador produzirá eventos normais e anômalos para a demonstração:
+Após a validação do modelo, um simulador produzirá eventos normais e anômalos para a demonstração, inclusive tráfego ICMP normal (`ping`) e inundação por ping, se o modelo tiver sido treinado com essas características:
 
 ```text
 Simulador → API TypeScript → Janela temporal → Serviço Python → Predição → Dashboard
@@ -218,11 +223,11 @@ O dashboard poderá exibir:
 
 - estado atual da rede;
 - probabilidade estimada de ataque;
-- métricas recentes, como latência, pacotes e conexões por segundo;
+- métricas recentes, como latência, pacotes, conexões por segundo e, quando disponível, taxa de ICMP;
 - comportamento detectado;
 - principais fatores associados à predição.
 
-A classificação de um tipo específico, como DoS, somente será apresentada se o modelo tiver sido treinado e avaliado para produzir esse resultado. Caso contrário, o dashboard mostrará apenas a classe binária e uma descrição prudente dos sinais observados.
+A classificação de um tipo específico, como DoS ou ICMP flood, somente será apresentada se o modelo tiver sido treinado e avaliado para produzir esse resultado. Caso contrário, o dashboard mostrará apenas a classe binária e uma descrição prudente dos sinais observados.
 
 ## 10. Escalabilidade
 
@@ -275,7 +280,7 @@ Containers → múltiplas instâncias → testes de carga → métricas de latê
 
 ## 13. Próximos passos
 
-1. Escolher o dataset.
+1. Escolher o dataset, avaliando também a presença de tráfego ICMP e de rótulos de ataques ICMP.
 2. Realizar a análise exploratória.
 3. Definir exatamente o target e o mapeamento dos rótulos.
 4. Identificar as features utilizáveis e possíveis fontes de vazamento.

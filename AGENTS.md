@@ -32,7 +32,8 @@ O backend em TypeScript existe por separação de responsabilidades, não porque
 - Janelas temporais só devem ser implementadas se o dataset tiver ordenação temporal **real** — a ordem das linhas por si só não conta como tempo.
 - Sempre avaliar risco de vazamento de dados entre treino/teste, inclusive entre janelas sobrepostas ou eventos da mesma sessão/host.
 - O artefato do modelo exportado deve carregar ou referenciar de forma versionada todo o preprocessing usado no treino, para evitar divergência treino/produção.
-- Target inicial é binário (`normal` / `attack`); um tipo específico de ataque (ex.: DoS) só deve aparecer na saída se o modelo tiver sido treinado e avaliado especificamente para isso.
+- Target inicial é binário (`normal` / `attack`); um tipo específico de ataque (ex.: DoS ou ICMP flood) só deve aparecer na saída se o modelo tiver sido treinado e avaliado especificamente para isso.
+- ICMP está no escopo como protocolo, feature candidata e família de ataque (ping flood / ICMP flood) **quando o dataset permitir**. Não antecipar captura de pacotes, `ping` em produção ou simulador ICMP antes do pipeline de ML estar funcional e avaliado.
 
 ## Convenções de código e colaboração
 
