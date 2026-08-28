@@ -9,7 +9,7 @@ O objetivo inicial é classificar cada observação em uma das duas classes abai
 
 O projeto prioriza uma evolução verificável: primeiro um pipeline de ML reproduzível e avaliado; depois, quando houver uma necessidade arquitetural real, Data Lake, processamento batch, inferência e streaming.
 
-> **Status atual:** planejamento e seleção do dataset. Não há dataset selecionado, pipeline de ML, modelo treinado, infraestrutura AWS, API ou dashboard implementados.
+> **Status atual:** dataset oficial definido — CICIoT2023 via HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample` (`random_3way`). Ainda não há pipeline de ML, modelo treinado, infraestrutura AWS, API ou dashboard.
 
 ## Problema
 
@@ -25,8 +25,8 @@ Ainda não existe uma arquitetura de execução ou serviço implantado. O reposi
 
 ```mermaid
 flowchart LR
-    DOC[Documentação e planejamento] --> SELECT[Seleção do dataset]
-    SELECT --> EDA[Análise exploratória]
+    DOC[Documentação e planejamento] --> DATA[CICIoT2023 subsample]
+    DATA --> EDA[Análise exploratória]
 ```
 
 ## Arquitetura planejada
@@ -61,7 +61,7 @@ flowchart LR
 
 ## Status atual
 
-- [ ] Selecionar e documentar um dataset público de tráfego de rede, preferencialmente com tráfego ICMP e rótulos que permitam mapear ataques ICMP (ex.: ping flood) para a classe `attack`
+- [x] Selecionar e documentar um dataset público de tráfego de rede, preferencialmente com tráfego ICMP e rótulos que permitam mapear ataques ICMP (ex.: ping flood) para a classe `attack` — ver [docs/dataset.md](docs/dataset.md)
 - [ ] Realizar análise exploratória e definir o target binário
 - [ ] Implementar preprocessing reproduzível
 - [ ] Treinar e avaliar o baseline com Decision Tree
@@ -72,10 +72,10 @@ flowchart LR
 
 ## Pipeline de dados
 
-O pipeline ainda não foi implementado. A primeira versão local será definida após a escolha do dataset:
+O pipeline ainda não foi implementado. A primeira versão local usa o split já publicado no subsample (`train` / `validation` / `test`):
 
 ```text
-Dataset → validação → limpeza → features → divisão treino/validação/teste
+data/raw/ciciot2023-neto-subsample → validação → limpeza → features → treino/validação/teste
 ```
 
 A divisão deverá evitar vazamento de dados. Se o dataset não tiver tempo real ou grupos confiáveis (por exemplo, host, sessão ou captura), a ordem das linhas não será usada como informação temporal. Janelas temporais só serão avaliadas se houver timestamps e uma sequência temporal significativa.
@@ -153,6 +153,7 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 
 ## Documentação
 
+- [Dataset oficial](docs/dataset.md): CICIoT2023 (subsample HuggingFace), splits, rótulos e citação.
 - [Escopo inicial do projeto](docs/escopo-inicial.md): objetivos, estratégia experimental, métricas e arquitetura de demonstração.
 - [Roadmap de Data Engineering e AWS](docs/aws-roadmap.md): critérios e evolução planejada para Data Lake, batch, streaming e observabilidade.
 - [Diretrizes para agentes](AGENTS.md): regras de execução e ordem técnica do projeto.
@@ -162,6 +163,9 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 - https://aws.amazon.com/pt/what-is/icmp/
 - https://www.rfc-editor.org/rfc/rfc792
 - https://www.rfc-editor.org/rfc/rfc4443
+- https://www.unb.ca/cic/datasets/iotdataset-2023.html
+- https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample
+- https://www.mdpi.com/1424-8220/23/13/5941
 - https://www.unb.ca/cic/datasets/nsl.html
 - https://www.unb.ca/cic/datasets/ids-2017.html
 - https://www.unb.ca/cic/datasets/ids-2018.html
@@ -174,4 +178,4 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 
 ## Próxima entrega
 
-`[Data] Select network traffic dataset`: selecionar uma fonte pública, avaliar seus rótulos, features (incluindo ICMP, se disponível), qualidade, distribuição de classes, timestamps e riscos de vazamento antes de definir o primeiro pipeline.
+`[Data] Exploratory analysis of CICIoT2023 subsample`: EDA em `data/raw/ciciot2023-neto-subsample/`, mapeamento `label` → `normal`/`attack`, features utilizáveis e risco de vazamento nos splits publicados.

@@ -2,11 +2,11 @@
 
 Sistema para analisar métricas de tráfego de rede e classificar o estado da rede como **normal** ou **sob ataque**. Projeto acadêmico que combina experimentação em Machine Learning com engenharia de software.
 
-Leia [README.md](README.md) e, para o planejamento completo (dataset, modelos, métricas, arquitetura, roadmap), [docs/escopo-inicial.md](docs/escopo-inicial.md) antes de propor mudanças estruturais.
+Leia [README.md](README.md), [docs/dataset.md](docs/dataset.md) e, para o planejamento completo (dataset, modelos, métricas, arquitetura, roadmap), [docs/escopo-inicial.md](docs/escopo-inicial.md) antes de propor mudanças estruturais.
 
 ## Status atual
 
-Planejamento e seleção do dataset. Ainda não há pipeline de ML implementado, nem backend, nem frontend. **A implementação dos serviços (backend TypeScript, dashboard, simulador) só começa depois que o pipeline de ML estiver funcional e avaliado** — não adiante essa etapa mesmo que pareça mais simples de demonstrar.
+Dataset selecionado: **CICIoT2023** via HuggingFace [`lacg030175/CIC-IoT-2023-neto-subsample`](https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample) (config `random_3way`), em `data/raw/ciciot2023-neto-subsample/` (`train` / `validation` / `test` parquet). Ainda não há preprocessing versionado, modelo, backend nem frontend. **A implementação dos serviços (backend TypeScript, dashboard, simulador) só começa depois que o pipeline de ML estiver funcional e avaliado** — não adiante essa etapa mesmo que pareça mais simples de demonstrar. O simulador, quando existir, não deve usar o Atlas como conjunto de teste do classificador.
 
 ## Ordem de execução do projeto
 
@@ -40,8 +40,8 @@ O backend em TypeScript existe por separação de responsabilidades, não porque
 - Commits e nomes de branch: sejam consistentes com o histórico existente (`git log` para conferir o estilo).
 - Não commitar datasets grandes, credenciais ou artefatos de modelo pesados.
 - Não introduzir abstrações, containers ou serviços além do que a etapa atual do roadmap exige.
-- Ao abrir um Pull Request, siga o template em `.github/PULL_REQUEST_TEMPLATE.md` — preencha a seção de contexto do experimento (dataset, métricas antes/depois) sempre que a mudança afetar dados, features ou modelos.
-- Projeto multi-integrante: evite mudanças amplas e não relacionadas em um único PR, para facilitar revisão pelos colegas.
+- Ao abrir um Pull Request, siga o template em `.github/PULL_REQUEST_TEMPLATE.md`. O revisor é outro integrante do grupo: preencha tarefa, revisor sugerido e o que o colega deve conferir. Se a mudança afetar dados, features ou modelos, preencha também o contexto do experimento (dataset, split, métricas antes/depois, vazamento).
+- Projeto em grupo acadêmico: um PR = uma tarefa. Não misture entregas para facilitar a revisão pelos colegas.
 
 ## Escopo por ferramenta
 

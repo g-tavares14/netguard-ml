@@ -14,7 +14,9 @@ O projeto será considerado bem-sucedido quando:
 
 ## 2. Dataset
 
-O dataset ainda será escolhido. A seleção deve priorizar uma fonte pública de tráfego de rede que possua rótulos confiáveis e características úteis para diferenciar comportamento normal de ataques.
+O dataset oficial é o **CICIoT2023** (Neto et al., 2023), na distribuição HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample`, config `random_3way`. Detalhes, splits e citação: [docs/dataset.md](dataset.md).
+
+A fonte atende aos critérios abaixo: tráfego de rede público e rotulado, target binário (`label` 0/1), ICMP e ping flood (`DDoS-ICMP_Flood` e afins), e tamanho adequado ao treino local. Não substitui o artigo do CIC — o HuggingFace é o recorte de trabalho, não um dataset novo.
 
 Possíveis atributos incluem:
 
@@ -27,8 +29,6 @@ Possíveis atributos incluem:
 - número ou taxa de conexões;
 - erros e retransmissões;
 - características específicas dos ataques representados, inclusive ping flood / ICMP flood e Smurf, quando o dataset os rotular.
-
-A seleção deve preferir, quando possível, uma fonte que contenha tráfego ICMP e rótulos que permitam mapear ataques ICMP para a classe `attack`.
 
 Antes de definir a arquitetura de dados e os modelos, a análise exploratória deverá identificar:
 
@@ -280,12 +280,12 @@ Containers → múltiplas instâncias → testes de carga → métricas de latê
 
 ## 13. Próximos passos
 
-1. Escolher o dataset, avaliando também a presença de tráfego ICMP e de rótulos de ataques ICMP.
+1. ~~Escolher o dataset~~ — CICIoT2023 subsample HuggingFace; ver [docs/dataset.md](dataset.md).
 2. Realizar a análise exploratória.
-3. Definir exatamente o target e o mapeamento dos rótulos.
+3. Definir exatamente o target e o mapeamento dos rótulos (`label` 0/1 → `normal`/`attack`).
 4. Identificar as features utilizáveis e possíveis fontes de vazamento.
-5. Verificar se o dataset permite análise temporal.
-6. Definir a estratégia de divisão dos dados e as métricas.
+5. Verificar se o dataset permite análise temporal (não tratar a ordem das linhas como tempo).
+6. Usar os splits publicados (`train` / `validation` / `test`) e as métricas do escopo.
 7. Implementar a Decision Tree como baseline.
 8. Implementar e avaliar a Random Forest.
 9. Avaliar um modelo de boosting.

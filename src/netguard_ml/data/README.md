@@ -1,3 +1,3 @@
 # Dados
 
-Futuramente concentrará a leitura, validação e preparação inicial dos dados. O formato, a origem e os campos do dataset ainda não foram definidos.
+Leitura e validação do dataset oficial: CICIoT2023 subsample (`data/raw/ciciot2023-neto-subsample/`, parquet `train` / `validation` / `test`). Schema e rótulos em [docs/dataset.md](../../../docs/dataset.md). O loader ainda não foi implementado.

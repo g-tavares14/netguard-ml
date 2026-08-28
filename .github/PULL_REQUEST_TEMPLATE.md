@@ -1,37 +1,55 @@
-## Descrição
+## Tarefa do grupo
 
-<!-- O que este PR faz e por quê. Se resolver uma issue, referencie com "Closes #123". -->
+<!-- Qual entrega ou parte do trabalho este PR cobre? Ex.: dataset, EDA, baseline Decision Tree. -->
 
-## Tipo de mudança
+- **Tarefa:**
+- **Quem fez:**
+- **Revisor sugerido:** <!-- colega que não implementou esta parte -->
 
-- [ ] Nova funcionalidade
-- [ ] Correção de bug
-- [ ] Experimento / notebook de ML
-- [ ] Refatoração (sem mudança de comportamento)
-- [ ] Documentação
-- [ ] Infraestrutura / configuração
+## O que este PR faz
 
-## Contexto do experimento (se aplicável)
+<!-- Em 3–6 linhas, para quem não acompanhou o código. O que mudou e por quê. -->
 
-<!-- Preencha apenas se o PR envolver dataset, features, treinamento ou avaliação de modelo. Apague a seção caso contrário. -->
+## Tipo
 
-- **Dataset/versão usada:**
-- **Modelo(s) afetado(s):**
+- [ ] Dataset / dados
+- [ ] Análise exploratória
+- [ ] Preprocessing / features
+- [ ] Experimento de modelo (treino, métricas, comparação)
+- [ ] Documentação / relatório
+- [ ] Correção
+- [ ] Outro: <!-- especifique -->
+
+## Para o colega que for revisar
+
+Este PR será aprovado por outro integrante do grupo. Deixe explícito o que ele precisa conferir.
+
+1. Como reproduzir (comandos, a partir da raiz do repo):
+
+   ```bash
+   # exemplo: .venv/bin/python scripts/prepare_dataset.py
+   ```
+
+2. O que deve acontecer se estiver certo:
+3. O que **não** precisa ser revisado neste PR (fica para outra tarefa):
+4. Dúvida ou decisão em aberto para o grupo discutir:
+
+## Contexto do experimento
+
+<!-- Preencha se o PR mexer em dataset, features, treino ou avaliação. Apague a seção se não se aplicar. -->
+
+- **Dataset/versão:** CICIoT2023 subsample HuggingFace `random_3way` (revision em `data/raw/ciciot2023-neto-subsample/SOURCE.json`, se local)
+- **Split usado:** train / validation / test (não reembaralhar o conjunto)
+- **Target:** `label` 0 → `normal`, 1 → `attack`
+- **Modelo(s):**
 - **Métricas antes → depois** (accuracy, precision, recall, F1, FPR, FNR):
-- **Risco de vazamento de dados avaliado?**
-
-## Como testar
-
-<!-- Passos para reproduzir/validar localmente. -->
+- **Risco de vazamento avaliado?** (ex.: teste não usado no ajuste; sem misturar Atlas como teste)
 
 ## Checklist
 
-- [ ] Rodei o código localmente e funciona como esperado
-- [ ] Testes (quando existirem) passam
-- [ ] Sem dados sensíveis, credenciais ou arquivos grandes de dataset commitados
-- [ ] Documentação (README/docs) atualizada, se necessário
-- [ ] PR pequeno e focado em um único assunto
-
-## Notas adicionais
-
-<!-- Qualquer coisa que o revisor deva saber. -->
+- [ ] O PR cobre **uma** tarefa; mudanças não relacionadas ficam para outro PR
+- [ ] Um colega que não escreveu o código consegue seguir a seção “Para o colega que for revisar”
+- [ ] Rodei localmente o que este PR introduz
+- [ ] Não commitamos CSV/parquet grande, credenciais nem modelo `.pkl` / `.joblib`
+- [ ] Documentação (`README.md` / `docs/`) atualizada se a decisão do grupo mudou
+- [ ] Se for experimento: a seção de contexto acima está preenchida
