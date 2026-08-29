@@ -1,5 +1,7 @@
 # Escopo inicial do projeto
 
+[← Voltar ao README](../README.md) | [Dataset Oficial](dataset.md) | [Roadmap AWS](aws-roadmap.md)
+
 ## 1. Objetivo e critérios de sucesso
 
 O NetGuard ML deverá analisar métricas de tráfego e classificar o estado da rede inicialmente como **normal** ou **sob ataque**. A proposta inclui tanto o desenvolvimento do classificador quanto a experimentação necessária para entender seus limites e demonstrar seu funcionamento.
@@ -14,7 +16,8 @@ O projeto será considerado bem-sucedido quando:
 
 ## 2. Dataset
 
-O dataset oficial é o **CICIoT2023** (Neto et al., 2023), na distribuição HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample`, config `random_3way`. Detalhes, splits e citação: [docs/dataset.md](dataset.md).
+O dataset oficial é o **CICIoT2023** (Neto et al., 2023), na distribuição HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample`, config `random_3way`. Detalhes, splits e citação: [Dataset Oficial](dataset.md).
+
 
 A fonte atende aos critérios abaixo: tráfego de rede público e rotulado, target binário (`label` 0/1), ICMP e ping flood (`DDoS-ICMP_Flood` e afins), e tamanho adequado ao treino local. Não substitui o artigo do CIC — o HuggingFace é o recorte de trabalho, não um dataset novo.
 
@@ -280,7 +283,7 @@ Containers → múltiplas instâncias → testes de carga → métricas de latê
 
 ## 13. Próximos passos
 
-1. ~~Escolher o dataset~~ — CICIoT2023 subsample HuggingFace; ver [docs/dataset.md](dataset.md).
+1. ~~Escolher o dataset~~ — CICIoT2023 subsample HuggingFace; ver [Dataset Oficial](dataset.md).
 2. Realizar a análise exploratória.
 3. Definir exatamente o target e o mapeamento dos rótulos (`label` 0/1 → `normal`/`attack`).
 4. Identificar as features utilizáveis e possíveis fontes de vazamento.

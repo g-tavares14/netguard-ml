@@ -138,14 +138,30 @@ Releases serão criadas apenas quando esses marcos tiverem entregas verificávei
 
 ## Como executar localmente
 
-Não há aplicação executável nesta fase. Para acompanhar ou contribuir com o planejamento:
-
+1. Clone o repositório e acesse a pasta do projeto:
 ```bash
 git clone https://github.com/g-tavares14/netguard-ml.git
 cd netguard-ml
 ```
 
-O primeiro procedimento executável será adicionado junto com o dataset selecionado e a análise exploratória. Datasets, credenciais e artefatos de modelo não devem ser commitados.
+2. Crie e ative o ambiente virtual Python:
+```bash
+python -m venv .venv
+# Linux/macOS:
+source .venv/bin/activate
+# Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+```
+
+3. Baixe e prepare o dataset oficial (CICIoT2023 subsample):
+```bash
+python scripts/prepare_dataset.py
+```
+
+O procedimento salvará o dataset em `data/raw/ciciot2023-neto-subsample/` e gerará o subset para análise em `data/subset/ciciot2023_subset.parquet`. Consulte [docs/dataset.md](docs/dataset.md) para detalhes sobre a estrutura de dados.
+
+> **Atenção:** Datasets, ambientes virtuais, credenciais e artefatos de modelo estão no `.gitignore` e não devem ser commitados.
+
 
 ## Infraestrutura
 

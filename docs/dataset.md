@@ -1,12 +1,14 @@
 # Dataset oficial
 
+[← Voltar ao README](../README.md) | [Escopo Inicial](escopo-inicial.md) | [Roadmap AWS](aws-roadmap.md)
+
 O dataset oficial do NetGuard ML é o **CICIoT2023** (Neto et al., 2023), na distribuição HuggingFace [`lacg030175/CIC-IoT-2023-neto-subsample`](https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample), config **`random_3way`**.
 
 Não usamos os 169 CSVs do CIC nem a API do RIPE Atlas para treino ou teste do classificador.
 
 ## Por que esta fonte
 
-| Critério do [escopo](escopo-inicial.md) | Situação |
+| Critério do [escopo inicial](escopo-inicial.md) | Situação |
 | --- | --- |
 | Tráfego de rede rotulado | sim (`Label` com 34 classes, inclusive `BenignTraffic`) |
 | Target binário `normal` / `attack` | coluna `label`: `0` = benign, `1` = attack |
@@ -31,7 +33,7 @@ Use estes três arquivos. Não reembaralhar o conjunto inteiro para criar outro 
 Para baixar de novo e gerar um recorte de EDA (só a partir do `train`):
 
 ```bash
-.venv/bin/python scripts/prepare_dataset.py
+python scripts/prepare_dataset.py
 ```
 
 O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por `Label`, seed 42). Validação e teste oficiais não são misturados nesse arquivo.
@@ -60,3 +62,4 @@ O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por
 
 - Página do CIC: https://www.unb.ca/cic/datasets/iotdataset-2023.html
 - Recorte usado: https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample (revision em `SOURCE.json`)
+
