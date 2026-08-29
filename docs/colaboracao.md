@@ -5,7 +5,7 @@ Processo do grupo no NetGuard ML (projeto acadêmico, 3º semestre de Ciência d
 ## Regras
 
 1. **Um PR = uma entrega.** Não misture EDA com treino de modelo no mesmo PR.
-2. **Quem abre o PR não aprova o próprio PR.** Outro integrante com write precisa aprovar.
+2. **Quem abre o PR não aprova o próprio PR.** Outro integrante com write precisa aprovar. Sem essa aprovação, não mergeia na `main`.
 3. O template é de checkbox de propósito: marca a entrega, escreve duas frases, marca um revisor, marca o checklist.
 4. Um comentário automático de code review pode aparecer no PR. **Isso não conta como aprovação.** O colega humano ainda precisa ler e aprovar.
 
@@ -13,7 +13,7 @@ Processo do grupo no NetGuard ML (projeto acadêmico, 3º semestre de Ciência d
 
 1. Abre o PR contra `main` pelo GitHub (o template já vem preenchido).
 2. Marca a entrega e um revisor que não implementou aquela parte.
-3. Se você esquecer o revisor, o GitHub pede review para outro integrante automaticamente.
+3. No GitHub, em Reviewers, confirma o pedido de review para esse colega.
 4. Espera o comentário automático e a aprovação do colega.
 5. Só então merge.
 
