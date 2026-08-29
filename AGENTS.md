@@ -2,7 +2,7 @@
 
 Sistema para analisar métricas de tráfego de rede e classificar o estado da rede como **normal** ou **sob ataque**. Projeto acadêmico que combina experimentação em Machine Learning com engenharia de software.
 
-Leia [README.md](README.md), [docs/dataset.md](docs/dataset.md) e, para o planejamento completo (dataset, modelos, métricas, arquitetura, roadmap), [docs/escopo-inicial.md](docs/escopo-inicial.md) antes de propor mudanças estruturais.
+Leia [README.md](README.md), [docs/dataset.md](docs/dataset.md), [docs/escopo-inicial.md](docs/escopo-inicial.md) e [docs/aws-roadmap.md](docs/aws-roadmap.md) antes de propor mudanças estruturais.
 
 ## Status atual
 
