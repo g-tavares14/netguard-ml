@@ -46,7 +46,7 @@ O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por
 
 ## Features
 
-46 colunas de fluxo do CICIoT (duração, taxa, flags TCP, indicadores de protocolo incluindo `ICMP`, tamanhos, IAT, estatísticas) mais as quatro colunas de rótulo. Não há timestamp de captura: `IAT` é intervalo entre pacotes, não relógio. A ordem das linhas **não** é tempo.
+46 colunas de fluxo do CICIoT (duração, taxa, flags TCP, indicadores de protocolo incluindo `ICMP`, tamanhos, IAT, estatísticas) mais as quatro colunas de rótulo. Não há timestamp de captura: `IAT` é intervalo entre pacotes, não relógio. A ordem das linhas **não** é tempo. A EDA confirma isso e lista features utilizáveis em [Análise exploratória](eda.md).
 
 ## O que não entra no protocolo de avaliação
 

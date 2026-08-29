@@ -14,7 +14,7 @@ AWS será introduzida para resolver uma necessidade real do projeto, e não para
 Antes disso, o foco permanece em:
 
 ```text
-CICIoT2023 subsample → análise exploratória → preprocessing → baseline → avaliação e comparação
+CICIoT2023 subsample → análise exploratória (feita) → preprocessing → baseline → avaliação e comparação
 ```
 
 ## Visão de evolução

@@ -6,7 +6,7 @@ Leia [README.md](README.md), [docs/dataset.md](docs/dataset.md), [docs/escopo-in
 
 ## Status atual
 
-Dataset selecionado: **CICIoT2023** via HuggingFace [`lacg030175/CIC-IoT-2023-neto-subsample`](https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample) (config `random_3way`), em `data/raw/ciciot2023-neto-subsample/` (`train` / `validation` / `test` parquet). Ainda não há preprocessing versionado, modelo, backend nem frontend. **A implementação dos serviços (backend TypeScript, dashboard, simulador) só começa depois que o pipeline de ML estiver funcional e avaliado** — não adiante essa etapa mesmo que pareça mais simples de demonstrar. O simulador, quando existir, não deve usar o Atlas como conjunto de teste do classificador.
+Dataset selecionado e EDA concluída: **CICIoT2023** via HuggingFace [`lacg030175/CIC-IoT-2023-neto-subsample`](https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample) (config `random_3way`), em `data/raw/ciciot2023-neto-subsample/` (`train` / `validation` / `test` parquet). Achados e decisões de feature/target/vazamento: [docs/eda.md](docs/eda.md). Ainda não há preprocessing versionado, modelo, backend nem frontend. **A implementação dos serviços (backend TypeScript, dashboard, simulador) só começa depois que o pipeline de ML estiver funcional e avaliado** — não adiante essa etapa mesmo que pareça mais simples de demonstrar. O simulador, quando existir, não deve usar o Atlas como conjunto de teste do classificador.
 
 ## Ordem de execução do projeto
 

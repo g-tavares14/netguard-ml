@@ -1,3 +1,3 @@
 # Features
 
-Futuramente reunirá transformações e engenharia de features aprovadas durante a análise exploratória. Não há features, preprocessamento ou contrato de entrada definidos ainda.
+Futuramente reunirá transformações e engenharia de features aprovadas na EDA ([docs/eda.md](../../../docs/eda.md)). O preprocessing versionado ainda não foi implementado.

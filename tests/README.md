@@ -1,3 +1,7 @@
 # Testes
 
-Este diretório receberá testes automatizados à medida que o pipeline for implementado. Ainda não há código Python ou comportamento definido para testar.
+```bash
+.venv/bin/pytest
+```
+
+`tests/test_eda.py` cobre o loader `CiciotDataset` (parquets sintéticos) e a pipeline de EDA (oito inspectores + writer). Não usa o subsample real.

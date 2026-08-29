@@ -9,7 +9,7 @@ O objetivo inicial é classificar cada observação em uma das duas classes abai
 
 O projeto prioriza uma evolução verificável: primeiro um pipeline de ML reproduzível e avaliado; depois, quando houver uma necessidade arquitetural real, Data Lake, processamento batch, inferência e streaming.
 
-> **Status atual:** dataset oficial definido — CICIoT2023 via HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample` (`random_3way`). Ainda não há pipeline de ML, modelo treinado, infraestrutura AWS, API ou dashboard.
+> **Status atual:** dataset oficial definido e EDA concluída — CICIoT2023 via HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample` (`random_3way`). Ainda não há preprocessing versionado, modelo treinado, infraestrutura AWS, API ou dashboard. Ver [docs/eda.md](docs/eda.md).
 
 ## Problema
 
@@ -27,6 +27,7 @@ Ainda não existe uma arquitetura de execução ou serviço implantado. O reposi
 flowchart LR
     DOC[Documentação e planejamento] --> DATA[CICIoT2023 subsample]
     DATA --> EDA[Análise exploratória]
+    EDA --> NEXT[Preprocessing e baseline]
 ```
 
 ## Arquitetura planejada
@@ -62,7 +63,7 @@ flowchart LR
 ## Status atual
 
 - [x] Selecionar e documentar um dataset público de tráfego de rede, preferencialmente com tráfego ICMP e rótulos que permitam mapear ataques ICMP (ex.: ping flood) para a classe `attack` — ver [docs/dataset.md](docs/dataset.md)
-- [ ] Realizar análise exploratória e definir o target binário
+- [x] Realizar análise exploratória e definir o target binário — ver [docs/eda.md](docs/eda.md)
 - [ ] Implementar preprocessing reproduzível
 - [ ] Treinar e avaliar o baseline com Decision Tree
 - [ ] Comparar Random Forest e boosting
@@ -114,7 +115,7 @@ A infraestrutura será provisionada preferencialmente com Terraform, sem antecip
 
 ## Resultados
 
-Ainda não há resultados experimentais. Esta seção passará a registrar, a cada experimento relevante:
+A EDA está em [docs/eda.md](docs/eda.md). Ainda não há resultados de modelo. Esta seção passará a registrar, a cada experimento relevante:
 
 - dataset e versão utilizados;
 - definição de target e features;
@@ -158,7 +159,12 @@ source .venv/bin/activate
 python scripts/prepare_dataset.py
 ```
 
-O procedimento salvará o dataset em `data/raw/ciciot2023-neto-subsample/` e gerará o subset para análise em `data/subset/ciciot2023_subset.parquet`. Consulte [docs/dataset.md](docs/dataset.md) para detalhes sobre a estrutura de dados.
+4. Rode a análise exploratória (splits oficiais → `artifacts/eda/`):
+```bash
+python scripts/run_eda.py
+```
+
+O procedimento salvará o dataset em `data/raw/ciciot2023-neto-subsample/` e gerará o subset para análise em `data/subset/ciciot2023_subset.parquet`. Consulte [docs/dataset.md](docs/dataset.md) e [docs/eda.md](docs/eda.md).
 
 > **Atenção:** Datasets, ambientes virtuais, credenciais e artefatos de modelo estão no `.gitignore` e não devem ser commitados.
 
@@ -170,6 +176,7 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 ## Documentação
 
 - [Dataset oficial](docs/dataset.md): CICIoT2023 (subsample HuggingFace), splits, rótulos e citação.
+- [Análise exploratória](docs/eda.md): target, features utilizáveis, qualidade, ICMP, tempo e vazamento.
 - [Escopo inicial do projeto](docs/escopo-inicial.md): objetivos, estratégia experimental, métricas e arquitetura de demonstração.
 - [Roadmap de Data Engineering e AWS](docs/aws-roadmap.md): critérios e evolução planejada para Data Lake, batch, streaming e observabilidade.
 - [Diretrizes para agentes](AGENTS.md): regras de execução e ordem técnica do projeto.
@@ -194,4 +201,4 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 
 ## Próxima entrega
 
-`[Data] Exploratory analysis of CICIoT2023 subsample`: EDA em `data/raw/ciciot2023-neto-subsample/`, mapeamento `label` → `normal`/`attack`, features utilizáveis e risco de vazamento nos splits publicados.
+`[ML] Preprocessing e baseline Decision Tree`: pipeline versionado a partir das decisões de [docs/eda.md](docs/eda.md) (drop de colunas redundantes, deduplicação do train, experimento com/sem `IAT`/`Number`/`Weight`) e avaliação da árvore nos splits publicados.

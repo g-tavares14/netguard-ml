@@ -284,10 +284,10 @@ Containers → múltiplas instâncias → testes de carga → métricas de latê
 ## 13. Próximos passos
 
 1. ~~Escolher o dataset~~ — CICIoT2023 subsample HuggingFace; ver [Dataset Oficial](dataset.md).
-2. Realizar a análise exploratória.
-3. Definir exatamente o target e o mapeamento dos rótulos (`label` 0/1 → `normal`/`attack`).
-4. Identificar as features utilizáveis e possíveis fontes de vazamento.
-5. Verificar se o dataset permite análise temporal (não tratar a ordem das linhas como tempo).
+2. ~~Realizar a análise exploratória~~ — ver [Análise exploratória](eda.md).
+3. ~~Definir exatamente o target e o mapeamento dos rótulos (`label` 0/1 → `normal`/`attack`)~~ — confirmado na EDA.
+4. ~~Identificar as features utilizáveis e possíveis fontes de vazamento~~ — lista e ressalvas em [Análise exploratória](eda.md).
+5. ~~Verificar se o dataset permite análise temporal (não tratar a ordem das linhas como tempo)~~ — não permite; sem janelas nesta fase.
 6. Usar os splits publicados (`train` / `validation` / `test`) e as métricas do escopo.
 7. Implementar a Decision Tree como baseline.
 8. Implementar e avaliar a Random Forest.
