@@ -40,7 +40,7 @@ O backend em TypeScript existe por separação de responsabilidades, não porque
 - Commits e nomes de branch: sejam consistentes com o histórico existente (`git log` para conferir o estilo).
 - Não commitar datasets grandes, credenciais ou artefatos de modelo pesados.
 - Não introduzir abstrações, containers ou serviços além do que a etapa atual do roadmap exige.
-- Ao abrir um Pull Request, siga o template em `.github/PULL_REQUEST_TEMPLATE.md`. O revisor é outro integrante do grupo: preencha tarefa, revisor sugerido e o que o colega deve conferir. Se a mudança afetar dados, features ou modelos, preencha também o contexto do experimento (dataset, split, métricas antes/depois, vazamento).
+- Ao abrir um Pull Request, use o template curto em `.github/PULL_REQUEST_TEMPLATE.md`: marque a entrega, duas frases do que mudou, um revisor que **não** implementou a parte, e o checklist. Só preencha métricas de experimento se treinou ou avaliou modelo. Quem abre o PR não aprova o próprio PR; outro integrante precisa aprovar. Um comentário automático de review pode aparecer e **não** substitui a aprovação humana. Processo em [docs/colaboracao.md](docs/colaboracao.md).
 - Projeto em grupo acadêmico: um PR = uma tarefa. Não misture entregas para facilitar a revisão pelos colegas.
 
 ## Escopo por ferramenta
