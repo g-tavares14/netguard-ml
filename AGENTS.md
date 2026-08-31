@@ -16,7 +16,7 @@ Dataset → preprocessing → baseline (Decision Tree) → Random Forest → Boo
    → exportação do modelo → API de ML → backend TypeScript → simulador → dashboard
 ```
 
-Não pule etapas nem introduza infraestrutura (containers, múltiplas instâncias, microserviços) antes da hora — isso é explicitamente prioridade 4 ("se houver tempo").
+Não pule etapas nem introduza infraestrutura (containers, múltiplas instâncias, microsserviços) antes da hora — isso é explicitamente prioridade 4 ("se houver tempo").
 
 ## Arquitetura (planejada)
 
@@ -39,10 +39,24 @@ O backend em TypeScript existe por separação de responsabilidades, não porque
 
 - Commits e nomes de branch: sejam consistentes com o histórico existente (`git log` para conferir o estilo).
 - Não commitar datasets grandes, credenciais ou artefatos de modelo pesados.
-- Não introduzir abstrações, containers ou serviços além do que a etapa atual do roadmap exige.
+- Não introduzir abstracoes, containers ou serviços além do que a etapa atual do roadmap exige.
 - Ao abrir um Pull Request, use o template curto em `.github/PULL_REQUEST_TEMPLATE.md`: marque a entrega, duas frases do que mudou, um revisor que **não** implementou a parte, e o checklist. Só preencha métricas de experimento se treinou ou avaliou modelo. Quem abre o PR não aprova o próprio PR; outro integrante precisa aprovar. Um comentário automático de review pode aparecer e **não** substitui a aprovação humana. Processo em [docs/colaboracao.md](docs/colaboracao.md).
 - Projeto em grupo acadêmico: um PR = uma tarefa. Não misture entregas para facilitar a revisão pelos colegas.
 
 ## Escopo por ferramenta
 
 Este arquivo (`AGENTS.md`) é a fonte de verdade para qualquer agente de IA que trabalhe neste repositório.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live in GitHub Issues for `g-tavares14/netguard-ml` (via `gh`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical roles, labels equal to their names: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` at the repo root and ADRs under `docs/adr/`. See `docs/agents/domain.md`.
