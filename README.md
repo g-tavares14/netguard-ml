@@ -138,24 +138,36 @@ Releases serão criadas apenas quando esses marcos tiverem entregas verificávei
 
 ## Como executar localmente
 
+Os comandos abaixo partem da **raiz do repositório**. O `main` default procura os parquet em `data/raw/ciciot2023-neto-subsample/`.
+
 1. Clone o repositório e acesse a pasta do projeto:
 ```bash
 git clone https://github.com/g-tavares14/netguard-ml.git
 cd netguard-ml
 ```
 
-2. Crie e ative o ambiente virtual Python:
+2. Instale o [uv](https://docs.astral.sh/uv/) (Python 3.12+) e sincronize as dependências:
 ```bash
-python -m venv .venv
-# Linux/macOS:
-source .venv/bin/activate
-# Windows (PowerShell):
-.venv\Scripts\Activate.ps1
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"
+
+# Windows (PowerShell)
+# irm https://astral.sh/uv/install.ps1 | iex
+
+uv sync
 ```
 
 3. Baixe e prepare o dataset oficial (CICIoT2023 subsample):
 ```bash
-python scripts/prepare_dataset.py
+uv run python scripts/prepare_dataset.py
+```
+
+4. Inspecione o schema das features e rode os testes:
+```bash
+uv run python -m netguard_ml.data.main
+uv run python -m netguard_ml.data.main data/subset/ciciot2023_subset.parquet
+uv run pytest tests/ -q
 ```
 
 O procedimento salvará o dataset em `data/raw/ciciot2023-neto-subsample/` e gerará o subset para análise em `data/subset/ciciot2023_subset.parquet`. Consulte [docs/dataset.md](docs/dataset.md) para detalhes sobre a estrutura de dados.
