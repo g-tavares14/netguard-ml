@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 
 
 class UnsupportedDatasetFormatError(ValueError):
@@ -12,28 +12,28 @@ class DatasetReader(ABC):
     """Lê um dataset tabular do disco para um DataFrame."""
 
     @abstractmethod
-    def read(self, path: Path) -> pd.DataFrame:
+    def read(self, path: Path) -> pl.DataFrame:
         """Carrega o arquivo em `path`."""
 
 
 class ParquetDatasetReader(DatasetReader):
-    def read(self, path: Path) -> pd.DataFrame:
-        return pd.read_parquet(path)
+    def read(self, path: Path) -> pl.DataFrame:
+        return pl.read_parquet(path)
 
 
 class CsvDatasetReader(DatasetReader):
-    def read(self, path: Path) -> pd.DataFrame:
-        return pd.read_csv(path)
+    def read(self, path: Path) -> pl.DataFrame:
+        return pl.read_csv(path)
 
 
 class TsvDatasetReader(DatasetReader):
-    def read(self, path: Path) -> pd.DataFrame:
-        return pd.read_csv(path, sep="\t")
+    def read(self, path: Path) -> pl.DataFrame:
+        return pl.read_csv(path, separator="\t")
 
 
 class JsonDatasetReader(DatasetReader):
-    def read(self, path: Path) -> pd.DataFrame:
-        return pd.read_json(path)
+    def read(self, path: Path) -> pl.DataFrame:
+        return pl.read_json(path)
 
 
 _READERS: dict[str, type[DatasetReader]] = {
@@ -77,7 +77,7 @@ class DatasetSource:
         self.path = Path(path)
         self._reader = reader if reader is not None else reader_for(self.path)
 
-    def load(self) -> pd.DataFrame:
+    def load(self) -> pl.DataFrame:
         if self.path.is_dir():
             raise IsADirectoryError(self.path)
         if not self.path.is_file():

@@ -1,19 +1,19 @@
-import pandas as pd
+import polars as pl
 
 from netguard_ml.data import ColumnInfo, feature_schema
 
 
-def test_feature_schema_skips_label_columns(sample_frame: pd.DataFrame) -> None:
+def test_feature_schema_skips_label_columns(sample_frame: pl.DataFrame) -> None:
     schema = feature_schema(sample_frame)
 
     assert schema == {
-        0: ColumnInfo(name="flow_duration", dtype="float64"),
-        1: ColumnInfo(name="ICMP", dtype="int64"),
+        0: ColumnInfo(name="flow_duration", dtype="Float64"),
+        1: ColumnInfo(name="ICMP", dtype="Int64"),
     }
 
 
 def test_feature_schema_keeps_original_column_index() -> None:
-    frame = pd.DataFrame(
+    frame = pl.DataFrame(
         {
             "Label": ["BenignTraffic"],
             "rate": [1.5],
@@ -30,6 +30,6 @@ def test_feature_schema_keeps_original_column_index() -> None:
 
 
 def test_feature_schema_empty_when_only_labels() -> None:
-    frame = pd.DataFrame({"Label": ["BenignTraffic"], "label": [0]})
+    frame = pl.DataFrame({"Label": ["BenignTraffic"], "label": [0]})
 
     assert feature_schema(frame) == {}

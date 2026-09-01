@@ -166,7 +166,7 @@ O ecossistema Python será utilizado para:
 
 - análise e preparação dos dados;
 - treinamento e avaliação;
-- scikit-learn, pandas e NumPy;
+- scikit-learn, Polars e NumPy;
 - possível uso de XGBoost e SHAP;
 - carregamento do artefato treinado e inferência.
 

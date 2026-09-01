@@ -5,8 +5,7 @@ description = "Detecção de ataques em redes com Machine Learning"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pandas>=2.2",
-    "pyarrow>=17",
+    "polars>=1.44.1",
 ]
 
 [build-system]
@@ -16,7 +15,6 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "basedpyright>=1.29",
-    "pandas-stubs>=2.2",
     "pytest>=8",
     "ruff>=0.13",
 ]
