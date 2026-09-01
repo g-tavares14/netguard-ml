@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import pandas as pd
+import polars as pl
 
 LABEL_COLUMNS = frozenset({"Label", "Label_orig", "attack_class", "label"})
 
@@ -11,13 +11,11 @@ class ColumnInfo:
     dtype: str
 
 
-def feature_schema(frame: pd.DataFrame) -> dict[int, ColumnInfo]:
+def feature_schema(frame: pl.DataFrame) -> dict[int, ColumnInfo]:
     """Nome e dtype de cada coluna que não é rótulo, na ordem original."""
     schema: dict[int, ColumnInfo] = {}
-    for index, column in enumerate(frame.columns):
-        name = str(column)
+    for index, (name, dtype) in enumerate(frame.schema.items()):
         if name in LABEL_COLUMNS:
             continue
-        series = frame.iloc[:, index]
-        schema[index] = ColumnInfo(name=name, dtype=str(series.dtype))
+        schema[index] = ColumnInfo(name=name, dtype=str(dtype))
     return schema
