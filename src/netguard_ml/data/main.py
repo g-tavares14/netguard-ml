@@ -1,28 +1,40 @@
-import pandas as pd
+import sys
+from collections.abc import Sequence
 from pathlib import Path
 
-colunas_info = {}
-listaRotulos = ['Label', 'Label_orig', 'attack_class', 'label']
+from netguard_ml.data.reader import DatasetSource
+from netguard_ml.data.schema import feature_schema
 
-paths = [
-    r"C:\Users\Kauan\Desktop\GitHub\netguard-ml\data\raw\ciciot2023-neto-subsample\test.parquet",
-    r"C:\Users\Kauan\Desktop\GitHub\netguard-ml\data\raw\ciciot2023-neto-subsample\train.parquet",
-    r"C:\Users\Kauan\Desktop\GitHub\netguard-ml\data\raw\ciciot2023-neto-subsample\validation.parquet"
-]
+DEFAULT_RAW_DIR = Path("data/raw/ciciot2023-neto-subsample")
+DEFAULT_SPLITS = ("train.parquet", "validation.parquet", "test.parquet")
 
-for path in paths:
-    nome_arquivo = Path(path).stem  # "test", "train", "validation"
-    dataFrame = pd.read_parquet(path)
 
-    colunas_info[nome_arquivo] = {}
-    for idx_coluna, nome_coluna in enumerate(dataFrame.columns):
+def default_split_paths() -> list[Path]:
+    return [DEFAULT_RAW_DIR / name for name in DEFAULT_SPLITS]
 
-        if nome_coluna in listaRotulos:
-            continue
-        else:
-            colunas_info[nome_arquivo][idx_coluna] = {
-                "nome": nome_coluna,
-                "tipo": str(dataFrame[nome_coluna].dtype)
-            }
 
-print(colunas_info)
+def inspect_datasets(
+    paths: Sequence[Path | str],
+) -> dict[str, dict[int, dict[str, str]]]:
+    """Carrega cada arquivo e devolve nome/tipo das colunas de feature."""
+    result: dict[str, dict[int, dict[str, str]]] = {}
+    for raw in paths:
+        path = Path(raw)
+        frame = DatasetSource(path).load()
+        result[path.stem] = {
+            index: {"nome": info.name, "tipo": info.dtype}
+            for index, info in feature_schema(frame).items()
+        }
+    return result
+
+
+def main(argv: Sequence[str] | None = None) -> dict[str, dict[int, dict[str, str]]]:
+    args = list(argv) if argv is not None else sys.argv[1:]
+    paths: Sequence[Path | str] = args if args else default_split_paths()
+    info = inspect_datasets(paths)
+    print(info)
+    return info
+
+
+if __name__ == "__main__":
+    main()
