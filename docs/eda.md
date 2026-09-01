@@ -164,7 +164,7 @@ O README/escopo listavam tipo, código, echo request/reply e latência de ping. 
 
 ## Vazamento entre Splits
 
-Sobreposição **exata** das 46 features de Fluxo (sem rótulos). Interseção > 0 = o mesmo vetor de features em dois Splits. Confirmado por merge, não só hash.
+Sobreposição **exata** das 46 features de Fluxo (sem rótulos). Interseção > 0 = o mesmo vetor de features em dois Splits. Medido pela interseção de fingerprints (`hash_pandas_object` nas 46 features), não por merge de linhas.
 
 - fingerprints únicos: {"train": 1116511, "validation": 142251, "test": 142231}
 - interseção: {"train\u2229validation": 5210, "train\u2229test": 5254, "validation\u2229test": 1078}
