@@ -47,7 +47,7 @@ def carregar(origem: str) -> pd.DataFrame:
     if not caminho.exists():
         raise FileNotFoundError(
             f"arquivo não encontrado: {caminho}\n"
-            "rode: python scripts.prepare_dataset.py"
+            "rode: python scripts/prepare_dataset.py"
         )
     return pd.read_parquet(caminho)
 
@@ -232,7 +232,7 @@ Usado só para iterar. Regras abaixo saem do **train**.
         leak_bloco = f"""
 ## Vazamento entre Splits
 
-Sobreposição **exata** das 46 features de Fluxo (sem rótulos). Interseção > 0 = o mesmo vetor de features em dois Splits. Confirmado por merge, não só hash.
+Sobreposição **exata** das 46 features de Fluxo (sem rótulos). Interseção > 0 = o mesmo vetor de features em dois Splits. Medido pela interseção de fingerprints (`hash_pandas_object` nas 46 features), não por merge de linhas.
 
 - fingerprints únicos: {json.dumps(leakage["fingerprints_por_split"])}
 - interseção: {json.dumps(leakage["intersecao"], ensure_ascii=False)}
