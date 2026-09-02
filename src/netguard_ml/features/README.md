@@ -1,3 +1,3 @@
 # Features
 
-Futuramente reunirá transformações e engenharia de features aprovadas durante a análise exploratória. Não há features, preprocessamento ou contrato de entrada definidos ainda.
+Futuramente reunirá o Pipeline de preprocessing. A EDA já listou as 46 features de Fluxo e o que **não** entra (rótulos, janela, tipo/código ICMP): [docs/eda.md](../../../docs/eda.md). O Pipeline em si é a próxima entrega.
