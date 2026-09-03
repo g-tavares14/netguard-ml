@@ -1,6 +1,6 @@
 # Dataset oficial
 
-[← Voltar ao README](../README.md) | [Escopo Inicial](escopo-inicial.md) | [Roadmap AWS](aws-roadmap.md)
+[← Voltar ao README](../README.md) | [Como executar](como-executar.md) | [Escopo Inicial](escopo-inicial.md) | [EDA](eda.md) | [Roadmap AWS](aws-roadmap.md)
 
 O dataset oficial do NetGuard ML é o **CICIoT2023** (Neto et al., 2023), na distribuição HuggingFace [`lacg030175/CIC-IoT-2023-neto-subsample`](https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample), config **`random_3way`**.
 
@@ -33,7 +33,7 @@ Use estes três arquivos. Não reembaralhar o conjunto inteiro para criar outro 
 Para baixar de novo e gerar um recorte de EDA (só a partir do `train`):
 
 ```bash
-python scripts/prepare_dataset.py
+uv run python scripts/prepare_dataset.py
 ```
 
 O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por `Label`, seed 42). Validação e teste oficiais não são misturados nesse arquivo.

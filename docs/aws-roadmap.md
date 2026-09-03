@@ -1,6 +1,6 @@
 # Roadmap de Data Engineering e AWS
 
-[← Voltar ao README](../README.md) | [Escopo Inicial](escopo-inicial.md) | [Dataset Oficial](dataset.md)
+[← Voltar ao README](../README.md) | [Como executar](como-executar.md) | [Escopo Inicial](escopo-inicial.md) | [Dataset Oficial](dataset.md)
 
 ## Estado atual
 

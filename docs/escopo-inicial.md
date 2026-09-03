@@ -1,6 +1,6 @@
 # Escopo inicial do projeto
 
-[← Voltar ao README](../README.md) | [Dataset Oficial](dataset.md) | [Roadmap AWS](aws-roadmap.md)
+[← Voltar ao README](../README.md) | [Como executar](como-executar.md) | [Dataset Oficial](dataset.md) | [EDA](eda.md) | [Roadmap AWS](aws-roadmap.md)
 
 ## 1. Objetivo e critérios de sucesso
 
@@ -135,7 +135,7 @@ O ecossistema Python será utilizado para:
 
 - análise e preparação dos dados;
 - treinamento e avaliação;
-- scikit-learn, pandas e NumPy;
+- scikit-learn, Polars, pandas e NumPy;
 - possível uso de XGBoost e SHAP;
 - carregamento do artefato treinado e inferência.
 
