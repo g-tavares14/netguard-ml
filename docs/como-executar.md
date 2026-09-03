@@ -1,8 +1,8 @@
 # Como executar o NetGuard ML
 
-[← Voltar ao README](../README.md) | [Dataset Oficial](dataset.md) | [Escopo Inicial](escopo-inicial.md)
+[← Voltar ao README](../README.md) | [Dataset Oficial](dataset.md) | [EDA](eda.md) | [Escopo Inicial](escopo-inicial.md)
 
-Este tutorial cobre o que o repositório **já executa hoje**: ambiente Python com [uv](https://docs.astral.sh/uv/), download do CICIoT2023 subsample, inspeção do schema das features e testes.
+Este tutorial cobre o que o repositório **já executa hoje**: ambiente Python com [uv](https://docs.astral.sh/uv/), download do CICIoT2023 subsample, inspeção do schema das features, EDA e testes.
 
 Ainda **não** há treino de modelo, API, dashboard nem recursos AWS. Esses passos virão nas próximas entregas.
 
@@ -42,7 +42,7 @@ uv --version
 uv sync
 ```
 
-`uv sync` instala o pacote `netguard-ml` em modo editável, o Polars e as ferramentas de desenvolvimento (pytest, Ruff, basedpyright). Não é necessário ativar `.venv` na mão: use `uv run` nos comandos seguintes.
+`uv sync` instala o pacote `netguard-ml` em modo editável, o Polars, o pandas (EDA) e as ferramentas de desenvolvimento (pytest, Ruff, basedpyright). Não é necessário ativar `.venv` na mão: use `uv run` nos comandos seguintes.
 
 ## 3. Baixe e recorte o dataset
 
@@ -101,7 +101,23 @@ Exemplo (recorte, primeiras colunas):
 
 Formatos aceitos pelo leitor: `.parquet`, `.csv`, `.tsv`, `.json`.
 
-## 5. Rode os testes
+## 5. Rode a EDA
+
+O relatório usa o **train** como fonte da verdade. `--leakage` compara fingerprints das 46 features entre os splits. `--write-docs` regenera [docs/eda.md](eda.md).
+
+```bash
+uv run python -m netguard_ml.data.eda --on train --leakage
+```
+
+Para iterar no recorte (não substitui o train):
+
+```bash
+uv run python -m netguard_ml.data.eda --on recorte
+```
+
+Achados (Attack é maioria, ICMP é indicador 0/1, sem janela temporal): [eda.md](eda.md).
+
+## 6. Rode os testes
 
 ```bash
 uv run pytest tests/ -q
@@ -135,7 +151,7 @@ uv run basedpyright
 Não existem, neste estágio:
 
 - treino ou avaliação de modelo (`src/netguard_ml/models/` e `evaluation/` são placeholders);
-- preprocessing / engenharia de features além da inspeção de schema;
+- preprocessing / engenharia de features (próxima entrega; recomendações em [eda.md](eda.md));
 - API, dashboard ou Terraform / AWS.
 
 Se um comando desses aparecer em material antigo, ignore: o contrato atual é o deste tutorial e o [README](../README.md).
@@ -153,4 +169,4 @@ Se um comando desses aparecer em material antigo, ignore: o contrato atual é o 
 
 ## Próximo passo no projeto
 
-Com os parquet locais e o schema visível, a próxima entrega é a análise exploratória do subsample e o mapeamento `label` → `normal` / `attack`. Ver [escopo inicial](escopo-inicial.md).
+Com a EDA documentada, a próxima entrega é o preprocessing reproduzível (fit só no train, sem rótulos nas features). Ver [eda.md](eda.md) e o [escopo inicial](escopo-inicial.md).

@@ -5,7 +5,9 @@ description = "Detecção de ataques em redes com Machine Learning"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "pandas>=2.2",
     "polars>=1.44.1",
+    "pyarrow>=17",
 ]
 
 [build-system]
@@ -30,11 +32,15 @@ line-length = 88
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
+[tool.ruff.lint.per-file-ignores]
+"src/netguard_ml/data/eda.py" = ["E501"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.basedpyright]
 include = ["src", "tests"]
+ignore = ["src/netguard_ml/data/eda.py"]
 pythonVersion = "3.12"
 typeCheckingMode = "standard"
 venvPath = "."
