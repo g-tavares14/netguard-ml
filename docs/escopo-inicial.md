@@ -21,31 +21,13 @@ O dataset oficial é o **CICIoT2023** (Neto et al., 2023), na distribuição Hug
 
 A fonte atende aos critérios abaixo: tráfego de rede público e rotulado, target binário (`label` 0/1), ICMP e ping flood (`DDoS-ICMP_Flood` e afins), e tamanho adequado ao treino local. Não substitui o artigo do CIC — o HuggingFace é o recorte de trabalho, não um dataset novo.
 
-Possíveis atributos incluem:
+Neste fonte as features são as 46 colunas de Fluxo do CICIoT (duração, taxa, flags TCP, indicadores de protocolo incluindo `ICMP`, tamanhos, IAT, estatísticas). **Não há** tipo/código ICMP, taxa de echo request/reply nem latência de ping. ICMP entra como indicador `ICMP` (0/1) e como `Label` (`DDoS-ICMP_Flood`, `DDoS-ICMP_Fragmentation`, `Recon-PingSweep`). Achados: [EDA](eda.md).
 
-- latência e duração da conexão;
-- quantidade e taxa de pacotes;
-- bytes enviados e recebidos;
-- protocolo e portas utilizadas, incluindo ICMP;
-- tipo e código ICMP, taxa de echo request/reply e latência de ping;
-- mensagens de erro ICMP (destino inacessível, TTL excedido, fragmentação);
-- número ou taxa de conexões;
-- erros e retransmissões;
-- características específicas dos ataques representados, inclusive ping flood / ICMP flood e Smurf, quando o dataset os rotular.
-
-Antes de definir a arquitetura de dados e os modelos, a análise exploratória deverá identificar:
-
-1. features e tipos de dados disponíveis;
-2. categorias de ataque representadas;
-3. tamanho e distribuição das classes;
-4. valores ausentes, duplicados e inconsistências;
-5. necessidade de normalização, codificação ou transformação;
-6. presença de timestamps e de uma ordenação temporal significativa;
-7. risco de vazamento de dados entre treino e teste.
+A análise exploratória cobre esses pontos em [eda.md](eda.md): schema, categorias de ataque, distribuição Normal/Attack (aqui Attack é maioria), nulos/duplicatas/constantes, recomendações de escala, ausência de timestamp e vazamento entre Splits.
 
 O target inicial será binário. Os diferentes tipos de ataque, inclusive ping flood / ICMP flood, poderão ser agrupados na classe `attack`, desde que os rótulos do dataset permitam esse mapeamento de forma clara e documentada. Um tipo específico de ataque ICMP só deverá aparecer na saída se o modelo tiver sido treinado e avaliado para isso.
 
-> Janelas temporais somente serão implementadas se a estrutura do dataset representar uma sequência temporal real. A ordem das linhas, isoladamente, não será tratada como tempo.
+> **Janelas temporais não se aplicam a este fonte.** Não há relógio de captura; `IAT` não é timestamp; a ordem das linhas não é tempo. O classificador responde se **este Fluxo** é Normal ou Attack. Janelas só voltam se houver outra fonte com ordenação temporal real.
 
 ## 3. Estratégia de Machine Learning
 
@@ -73,11 +55,7 @@ O objetivo não é selecionar o modelo apenas pela maior accuracy, mas compreend
 
 ## 4. Avaliação e comparação
 
-Todos os modelos deverão usar as mesmas divisões de treino, validação e teste. A estratégia exata será definida depois de analisar a estrutura temporal e a distribuição do dataset:
-
-- dados sem dependência temporal poderão usar divisão estratificada;
-- dados temporais deverão respeitar a ordem cronológica;
-- eventos originados da mesma sessão, host ou captura não deverão ser indevidamente distribuídos entre treino e teste quando isso causar vazamento.
+Todos os modelos deverão usar os Splits publicados (`train` / `validation` / `test`). Não há ordenação temporal neste fonte e não há ID de sessão/host no schema. A EDA mediu duplicatas de Fluxo entre Splits; o preprocessing deverá tratá-las sem reembaralhar o corpus.
 
 As métricas previstas são:
 
@@ -91,22 +69,13 @@ As métricas previstas são:
 - tempo de treinamento;
 - tempo de inferência.
 
-Accuracy não será usada isoladamente. Em um dataset com 99% de tráfego normal, um classificador que sempre responda `normal` alcançaria 99% de accuracy e ainda seria inútil para detecção. Por isso, recall da classe de ataque e falsos negativos terão destaque na análise, sem ignorar o custo de falsos positivos.
+Accuracy não será usada isoladamente. Neste subsample o Attack é maioria (~86% no train): um classificador que sempre responda `attack` teria accuracy alta e recall de Attack alto, e ainda seria inútil. Recall da classe Attack e falsos negativos continuam no centro, sem ignorar falsos positivos (Normal classificado como Attack).
 
 ## 5. Análise temporal
 
-Se o dataset permitir, eventos individuais serão agregados em janelas de tempo. Dentro de cada janela poderão ser calculadas features como:
+Não se aplica ao Subsample CICIoT. Cada linha já é um Fluxo agregado; não existe timestamp de captura. Agregar esses Fluxos em “N segundos” inventaria tempo a partir da ordem das linhas.
 
-- média, máximo e desvio-padrão da latência;
-- contagem e taxa de pacotes;
-- total de bytes recebidos e enviados;
-- quantidade ou taxa de conexões;
-- taxa de erros e retransmissões;
-- taxa de pacotes ICMP e de echo request/reply, se o dataset representar ICMP.
-
-Esse mecanismo muda a pergunta de “este evento parece um ataque?” para “o comportamento da rede nos últimos N segundos é compatível com um ataque?”.
-
-O tamanho da janela, o passo entre janelas e a regra para atribuição do rótulo serão definidos somente após o estudo do dataset. Janelas sobrepostas deverão permanecer integralmente no mesmo conjunto de treino, validação ou teste para evitar vazamento.
+A pergunta permanece: **este Fluxo é Normal ou Attack?** Janelas de N segundos só voltam se no futuro houver outra fonte com relógio real.
 
 ## 6. Explicabilidade e análise de erros
 
@@ -152,7 +121,7 @@ O backend principal será responsável por:
 
 - receber e validar dados;
 - organizar o fluxo da aplicação;
-- agregar eventos e construir janelas temporais, se aplicável;
+- agregar eventos e construir janelas temporais **somente se** a fonte de produção tiver tempo real (não é o caso deste subsample);
 - persistir informações necessárias;
 - comunicar-se com o serviço de ML;
 - entregar resultados ao frontend;
@@ -166,7 +135,7 @@ O ecossistema Python será utilizado para:
 
 - análise e preparação dos dados;
 - treinamento e avaliação;
-- scikit-learn, pandas e NumPy;
+- scikit-learn, Polars, pandas e NumPy;
 - possível uso de XGBoost e SHAP;
 - carregamento do artefato treinado e inferência.
 
@@ -219,7 +188,7 @@ O artefato exportado deverá carregar junto, ou referenciar de forma versionada,
 Após a validação do modelo, um simulador produzirá eventos normais e anômalos para a demonstração, inclusive tráfego ICMP normal (`ping`) e inundação por ping, se o modelo tiver sido treinado com essas características:
 
 ```text
-Simulador → API TypeScript → Janela temporal → Serviço Python → Predição → Dashboard
+Simulador → API TypeScript → (Fluxo; janela só com fonte temporal) → Serviço Python → Predição → Dashboard
 ```
 
 O dashboard poderá exibir:
@@ -266,7 +235,7 @@ Dataset → preprocessing → baseline → treinamento → avaliação
 ### Prioridade 2 — Diferencial
 
 ```text
-Comparação de modelos → janelas temporais → análise de erros → explicabilidade
+Comparação de modelos → análise de erros → explicabilidade
 ```
 
 ### Prioridade 3 — Demonstração
@@ -284,12 +253,12 @@ Containers → múltiplas instâncias → testes de carga → métricas de latê
 ## 13. Próximos passos
 
 1. ~~Escolher o dataset~~ — CICIoT2023 subsample HuggingFace; ver [Dataset Oficial](dataset.md).
-2. Realizar a análise exploratória.
-3. Definir exatamente o target e o mapeamento dos rótulos (`label` 0/1 → `normal`/`attack`).
-4. Identificar as features utilizáveis e possíveis fontes de vazamento.
-5. Verificar se o dataset permite análise temporal (não tratar a ordem das linhas como tempo).
+2. ~~Realizar a análise exploratória~~ — [eda.md](eda.md).
+3. ~~Definir o target~~ — `label` 0/1 → Normal/Attack.
+4. ~~Identificar features e vazamento~~ — 46 features de Fluxo; duplicatas entre Splits medidas na EDA.
+5. ~~Análise temporal~~ — não neste fonte.
 6. Usar os splits publicados (`train` / `validation` / `test`) e as métricas do escopo.
-7. Implementar a Decision Tree como baseline.
+7. Implementar preprocessing reproduzível, depois a Decision Tree como baseline.
 8. Implementar e avaliar a Random Forest.
 9. Avaliar um modelo de boosting.
 10. Comparar resultados e analisar os erros.

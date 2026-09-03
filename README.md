@@ -2,31 +2,37 @@
 
 Projeto de portfólio para detectar tráfego de rede suspeito com Machine Learning e, progressivamente, aplicar práticas de Data Engineering na AWS.
 
-O objetivo inicial é classificar cada observação em uma das duas classes abaixo:
+O objetivo inicial é classificar cada **Fluxo** (linha já agregada pelo CIC) em uma das duas classes abaixo:
 
 - `normal`
 - `attack`
 
 O projeto prioriza uma evolução verificável: primeiro um pipeline de ML reproduzível e avaliado; depois, quando houver uma necessidade arquitetural real, Data Lake, processamento batch, inferência e streaming.
 
-> **Status atual:** dataset oficial definido — CICIoT2023 via HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample` (`random_3way`). Ainda não há pipeline de ML, modelo treinado, infraestrutura AWS, API ou dashboard.
+> **Status atual:** dataset oficial definido, leitura local (parquet/CSV/TSV/JSON) e EDA do subsample documentada em [docs/eda.md](docs/eda.md). Ainda não há preprocessing versionado, modelo treinado, infraestrutura AWS, API ou dashboard.
 
 ## Problema
 
 Ataques podem alterar padrões de tráfego, como taxas de pacotes, volume de bytes, duração de conexões, taxas de erro e mensagens ICMP. O NetGuard ML investigará se essas características permitem distinguir comportamento normal de comportamento sob ataque.
 
-O Internet Control Message Protocol (ICMP) faz parte do escopo: é usado para relatório de erros de rede, diagnóstico (`ping` / `traceroute`) e também aparece em ataques como inundação por ping (ICMP flood). Features candidatas incluem tipo e código ICMP, taxa de echo request/reply, latência de ping e mensagens de erro ICMP. O target permanece binário (`normal` / `attack`); um tipo específico como ICMP flood só será exibido se o modelo tiver sido treinado e avaliado para isso.
+O Internet Control Message Protocol (ICMP) faz parte do escopo como protocolo e como família de ataque no subsample (`DDoS-ICMP_Flood`, `DDoS-ICMP_Fragmentation`, `Recon-PingSweep`). Neste fonte a feature é o **indicador** `ICMP` (0/1), não tipo/código ICMP, nem taxa de echo, nem latência de ping — essas colunas não existem no recorte. Sem captura de pacotes. O target permanece binário (`normal` / `attack`); um tipo específico como ICMP flood só será exibido se o modelo tiver sido treinado e avaliado para isso. Detalhes: [docs/eda.md](docs/eda.md).
 
 Accuracy não será usada isoladamente: o projeto dará atenção especial ao recall da classe `attack`, aos falsos negativos e aos falsos positivos.
 
 ## Arquitetura atual
 
-Ainda não existe uma arquitetura de execução ou serviço implantado. O repositório contém somente documentação e a estrutura inicial para o futuro pipeline Python.
+Não há serviço implantado. O que existe localmente é o download do subsample, a leitura tabular, a inspeção do schema das features e a EDA em `src/netguard_ml/data/`.
 
 ```mermaid
 flowchart LR
-    DOC[Documentação e planejamento] --> DATA[CICIoT2023 subsample]
-    DATA --> EDA[Análise exploratória]
+    HF[HuggingFace CICIoT2023 subsample] --> PREP[scripts/prepare_dataset.py]
+    PREP --> RAW[data/raw parquet]
+    PREP --> SUB[data/subset parquet]
+    RAW --> LOAD[DatasetSource]
+    SUB --> LOAD
+    LOAD --> SCHEMA[schema das features]
+    RAW --> EDA[EDA]
+    SUB --> EDA
 ```
 
 ## Arquitetura planejada
@@ -51,7 +57,7 @@ flowchart LR
 
 | Área | Atual | Planejado, quando necessário |
 | --- | --- | --- |
-| Linguagem e dados | Documentação Markdown | Python, Polars, NumPy e SQL |
+| Linguagem e dados | Python 3.12, uv, Polars (leitura), pandas (EDA) | NumPy e SQL |
 | Machine Learning | Não implementado | scikit-learn; possível XGBoost e SHAP |
 | Armazenamento analítico | Não implementado | Amazon S3, Parquet, AWS Glue Data Catalog e Athena |
 | Orquestração batch | Não implementado | Scripts Python; Step Functions somente se a complexidade justificar |
@@ -62,7 +68,8 @@ flowchart LR
 ## Status atual
 
 - [x] Selecionar e documentar um dataset público de tráfego de rede, preferencialmente com tráfego ICMP e rótulos que permitam mapear ataques ICMP (ex.: ping flood) para a classe `attack` — ver [docs/dataset.md](docs/dataset.md)
-- [ ] Realizar análise exploratória e definir o target binário
+- [x] Baixar o subsample, ler os splits e inspecionar o schema das features
+- [x] Realizar análise exploratória e definir o target binário — ver [docs/eda.md](docs/eda.md)
 - [ ] Implementar preprocessing reproduzível
 - [ ] Treinar e avaliar o baseline com Decision Tree
 - [ ] Comparar Random Forest e boosting
@@ -72,13 +79,13 @@ flowchart LR
 
 ## Pipeline de dados
 
-O pipeline ainda não foi implementado. A primeira versão local usa o split já publicado no subsample (`train` / `validation` / `test`):
+O download e a leitura dos splits já publicados (`train` / `validation` / `test`) estão implementados. Limpeza, features de modelo e treino ainda não.
 
 ```text
 data/raw/ciciot2023-neto-subsample → validação → limpeza → features → treino/validação/teste
 ```
 
-A divisão deverá evitar vazamento de dados. Se o dataset não tiver tempo real ou grupos confiáveis (por exemplo, host, sessão ou captura), a ordem das linhas não será usada como informação temporal. Janelas temporais só serão avaliadas se houver timestamps e uma sequência temporal significativa.
+A divisão usa os Splits publicados e evita vazamento (rótulos nunca entram como feature; duplicatas entre Splits estão medidas na EDA). Não há timestamp de captura: `IAT` não é relógio e a ordem das linhas não é tempo. **Janelas temporais não se aplicam a este fonte.**
 
 Posteriormente, o mesmo fluxo poderá evoluir para um Data Lake:
 
@@ -163,14 +170,16 @@ uv sync
 uv run python scripts/prepare_dataset.py
 ```
 
-4. Inspecione o schema das features e rode os testes:
+4. Inspecione o schema das features, rode a EDA e os testes:
 ```bash
 uv run python -m netguard_ml.data.main
-uv run python -m netguard_ml.data.main data/subset/ciciot2023_subset.parquet
+uv run python -m netguard_ml.data.eda --on train --leakage
 uv run pytest tests/ -q
 ```
 
-O procedimento salvará o dataset em `data/raw/ciciot2023-neto-subsample/` e gerará o subset para análise em `data/subset/ciciot2023_subset.parquet`. Consulte [docs/dataset.md](docs/dataset.md) para detalhes sobre a estrutura de dados.
+O `main` sem argumentos lê os parquet em `data/raw/ciciot2023-neto-subsample/`. A EDA usa o **train** como fonte da verdade (`--on recorte` só itera no subset). Os testes (15, hoje) não precisam desses arquivos.
+
+Consulte [docs/dataset.md](docs/dataset.md) e [docs/eda.md](docs/eda.md).
 
 > **Atenção:** Datasets, ambientes virtuais, credenciais e artefatos de modelo estão no `.gitignore` e não devem ser commitados.
 
@@ -182,6 +191,7 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 ## Documentação
 
 - [Dataset oficial](docs/dataset.md): CICIoT2023 (subsample HuggingFace), splits, rótulos e citação.
+- [Análise exploratória](docs/eda.md): schema, target binário, ICMP real vs wishlist, vazamento, recomendações de preprocessing.
 - [Escopo inicial do projeto](docs/escopo-inicial.md): objetivos, estratégia experimental, métricas e arquitetura de demonstração.
 - [Roadmap de Data Engineering e AWS](docs/aws-roadmap.md): critérios e evolução planejada para Data Lake, batch, streaming e observabilidade.
 - [Diretrizes para agentes](AGENTS.md): regras de execução e ordem técnica do projeto.
@@ -206,4 +216,4 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 
 ## Próxima entrega
 
-`[Data] Exploratory analysis of CICIoT2023 subsample`: EDA em `data/raw/ciciot2023-neto-subsample/`, mapeamento `label` → `normal`/`attack`, features utilizáveis e risco de vazamento nos splits publicados.
+`[ML] Preprocessing reproduzível do Subsample CICIoT`: Pipeline versionado (fit só no train), sem rótulos nas features, tratamento de constantes/duplicatas e escala — ver recomendações em [docs/eda.md](docs/eda.md).

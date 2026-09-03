@@ -33,7 +33,7 @@ Use estes três arquivos. Não reembaralhar o conjunto inteiro para criar outro 
 Para baixar de novo e gerar um recorte de EDA (só a partir do `train`):
 
 ```bash
-python scripts/prepare_dataset.py
+uv run python scripts/prepare_dataset.py
 ```
 
 O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por `Label`, seed 42). Validação e teste oficiais não são misturados nesse arquivo.
@@ -47,6 +47,8 @@ O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por
 ## Features
 
 46 colunas de fluxo do CICIoT (duração, taxa, flags TCP, indicadores de protocolo incluindo `ICMP`, tamanhos, IAT, estatísticas) mais as quatro colunas de rótulo. Não há timestamp de captura: `IAT` é intervalo entre pacotes, não relógio. A ordem das linhas **não** é tempo.
+
+EDA (schema, balanceamento — Attack é maioria neste recorte —, ICMP real vs wishlist, duplicatas entre Splits): [eda.md](eda.md).
 
 ## O que não entra no protocolo de avaliação
 
@@ -62,4 +64,3 @@ O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por
 
 - Página do CIC: https://www.unb.ca/cic/datasets/iotdataset-2023.html
 - Recorte usado: https://huggingface.co/datasets/lacg030175/CIC-IoT-2023-neto-subsample (revision em `SOURCE.json`)
-
