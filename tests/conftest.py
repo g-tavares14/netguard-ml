@@ -1,10 +1,10 @@
-import pandas as pd
+import polars as pl
 import pytest
 
 
 @pytest.fixture
-def sample_frame() -> pd.DataFrame:
-    return pd.DataFrame(
+def sample_frame() -> pl.DataFrame:
+    return pl.DataFrame(
         {
             "flow_duration": [1.0, 2.0],
             "ICMP": [0, 1],

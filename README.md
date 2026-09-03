@@ -51,7 +51,7 @@ flowchart LR
 
 | Área | Atual | Planejado, quando necessário |
 | --- | --- | --- |
-| Linguagem e dados | Documentação Markdown | Python, pandas, NumPy e SQL |
+| Linguagem e dados | Documentação Markdown | Python, Polars, NumPy e SQL |
 | Machine Learning | Não implementado | scikit-learn; possível XGBoost e SHAP |
 | Armazenamento analítico | Não implementado | Amazon S3, Parquet, AWS Glue Data Catalog e Athena |
 | Orquestração batch | Não implementado | Scripts Python; Step Functions somente se a complexidade justificar |
