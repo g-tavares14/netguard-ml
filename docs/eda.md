@@ -187,6 +187,6 @@ Não implementado aqui.
 ## Como reproduzir
 
 ```bash
-python scripts/prepare_dataset.py
-.venv/bin/python src/netguard_ml/data/main.py --on train --leakage
+uv run python scripts/prepare_dataset.py
+uv run python -m netguard_ml.data.eda --on train --leakage
 ```
