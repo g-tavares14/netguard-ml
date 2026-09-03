@@ -1,3 +1,7 @@
 # Código Python do NetGuard ML
 
-Este diretório reunirá o código do pipeline de Machine Learning. O dataset oficial é o CICIoT2023 subsample em `data/raw/ciciot2023-neto-subsample/` ([docs/dataset.md](../../docs/dataset.md)). Ainda não há preprocessing, modelo nem contrato de inferência.
+Pacote do pipeline. O dataset oficial é o CICIoT2023 subsample em `data/raw/ciciot2023-neto-subsample/` ([docs/dataset.md](../../docs/dataset.md)).
+
+Hoje existe a leitura dos splits e a inspeção do schema das features (`netguard_ml.data`). Ainda não há preprocessing de modelo, treino nem contrato de inferência.
+
+Como executar: [docs/como-executar.md](../../docs/como-executar.md).

@@ -1,6 +1,6 @@
 # Escopo inicial do projeto
 
-[← Voltar ao README](../README.md) | [Dataset Oficial](dataset.md) | [Roadmap AWS](aws-roadmap.md)
+[← Voltar ao README](../README.md) | [Como executar](como-executar.md) | [Dataset Oficial](dataset.md) | [Roadmap AWS](aws-roadmap.md)
 
 ## 1. Objetivo e critérios de sucesso
 

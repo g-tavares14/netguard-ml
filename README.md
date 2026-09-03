@@ -9,7 +9,9 @@ O objetivo inicial é classificar cada observação em uma das duas classes abai
 
 O projeto prioriza uma evolução verificável: primeiro um pipeline de ML reproduzível e avaliado; depois, quando houver uma necessidade arquitetural real, Data Lake, processamento batch, inferência e streaming.
 
-> **Status atual:** dataset oficial definido — CICIoT2023 via HuggingFace `lacg030175/CIC-IoT-2023-neto-subsample` (`random_3way`). Ainda não há pipeline de ML, modelo treinado, infraestrutura AWS, API ou dashboard.
+> **Status atual:** dataset oficial definido (CICIoT2023 subsample HuggingFace, `random_3way`), leitura local de parquet/CSV/TSV/JSON e inspeção do schema das features. Ainda não há modelo treinado, infraestrutura AWS, API ou dashboard.
+
+Para subir o ambiente e rodar o que já existe, siga o [tutorial de execução](docs/como-executar.md).
 
 ## Problema
 
@@ -21,12 +23,16 @@ Accuracy não será usada isoladamente: o projeto dará atenção especial ao re
 
 ## Arquitetura atual
 
-Ainda não existe uma arquitetura de execução ou serviço implantado. O repositório contém somente documentação e a estrutura inicial para o futuro pipeline Python.
+Não há serviço implantado. O que existe localmente é o download do subsample, a leitura tabular e a inspeção do schema das features.
 
 ```mermaid
 flowchart LR
-    DOC[Documentação e planejamento] --> DATA[CICIoT2023 subsample]
-    DATA --> EDA[Análise exploratória]
+    HF[HuggingFace CICIoT2023 subsample] --> PREP[scripts/prepare_dataset.py]
+    PREP --> RAW[data/raw parquet]
+    PREP --> SUB[data/subset parquet]
+    RAW --> LOAD[DatasetSource]
+    SUB --> LOAD
+    LOAD --> SCHEMA[schema das features]
 ```
 
 ## Arquitetura planejada
@@ -51,7 +57,7 @@ flowchart LR
 
 | Área | Atual | Planejado, quando necessário |
 | --- | --- | --- |
-| Linguagem e dados | Documentação Markdown | Python, Polars, NumPy e SQL |
+| Linguagem e dados | Python 3.12, uv, Polars | NumPy e SQL |
 | Machine Learning | Não implementado | scikit-learn; possível XGBoost e SHAP |
 | Armazenamento analítico | Não implementado | Amazon S3, Parquet, AWS Glue Data Catalog e Athena |
 | Orquestração batch | Não implementado | Scripts Python; Step Functions somente se a complexidade justificar |
@@ -62,6 +68,7 @@ flowchart LR
 ## Status atual
 
 - [x] Selecionar e documentar um dataset público de tráfego de rede, preferencialmente com tráfego ICMP e rótulos que permitam mapear ataques ICMP (ex.: ping flood) para a classe `attack` — ver [docs/dataset.md](docs/dataset.md)
+- [x] Baixar o subsample, ler os splits e inspecionar o schema das features
 - [ ] Realizar análise exploratória e definir o target binário
 - [ ] Implementar preprocessing reproduzível
 - [ ] Treinar e avaliar o baseline com Decision Tree
@@ -72,7 +79,7 @@ flowchart LR
 
 ## Pipeline de dados
 
-O pipeline ainda não foi implementado. A primeira versão local usa o split já publicado no subsample (`train` / `validation` / `test`):
+O download e a leitura dos splits já publicados (`train` / `validation` / `test`) estão implementados. Limpeza, features de modelo e treino ainda não.
 
 ```text
 data/raw/ciciot2023-neto-subsample → validação → limpeza → features → treino/validação/teste
@@ -138,39 +145,29 @@ Releases serão criadas apenas quando esses marcos tiverem entregas verificávei
 
 ## Como executar localmente
 
-Os comandos abaixo partem da **raiz do repositório**. O `main` default procura os parquet em `data/raw/ciciot2023-neto-subsample/`.
+Tutorial completo (pré-requisitos, saída esperada e problemas comuns): **[docs/como-executar.md](docs/como-executar.md)**.
 
-1. Clone o repositório e acesse a pasta do projeto:
+Resumo — todos os comandos na **raiz do repositório**. Python **3.12+** e [uv](https://docs.astral.sh/uv/). Não ative `.venv` na mão; use `uv run`.
+
 ```bash
 git clone https://github.com/g-tavares14/netguard-ml.git
 cd netguard-ml
-```
 
-2. Instale o [uv](https://docs.astral.sh/uv/) (Python 3.12+) e sincronize as dependências:
-```bash
 # macOS / Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source "$HOME/.local/bin/env"
-
-# Windows (PowerShell)
-# irm https://astral.sh/uv/install.ps1 | iex
+# Windows (PowerShell): irm https://astral.sh/uv/install.ps1 | iex
 
 uv sync
-```
-
-3. Baixe e prepare o dataset oficial (CICIoT2023 subsample):
-```bash
 uv run python scripts/prepare_dataset.py
-```
-
-4. Inspecione o schema das features e rode os testes:
-```bash
 uv run python -m netguard_ml.data.main
 uv run python -m netguard_ml.data.main data/subset/ciciot2023_subset.parquet
 uv run pytest tests/ -q
 ```
 
-O procedimento salvará o dataset em `data/raw/ciciot2023-neto-subsample/` e gerará o subset para análise em `data/subset/ciciot2023_subset.parquet`. Consulte [docs/dataset.md](docs/dataset.md) para detalhes sobre a estrutura de dados.
+O `main` sem argumentos lê os parquet em `data/raw/ciciot2023-neto-subsample/`. O script de preparação também gera `data/subset/ciciot2023_subset.parquet` (recorte do `train` para EDA). Os testes (15, hoje) não precisam desses arquivos.
+
+Ainda não há comando de treino, inferência ou dashboard.
 
 > **Atenção:** Datasets, ambientes virtuais, credenciais e artefatos de modelo estão no `.gitignore` e não devem ser commitados.
 
@@ -181,6 +178,7 @@ Não há recursos AWS nem código Terraform no repositório neste momento. Quand
 
 ## Documentação
 
+- [Como executar](docs/como-executar.md): ambiente, download do dataset, inspeção de schema e testes.
 - [Dataset oficial](docs/dataset.md): CICIoT2023 (subsample HuggingFace), splits, rótulos e citação.
 - [Escopo inicial do projeto](docs/escopo-inicial.md): objetivos, estratégia experimental, métricas e arquitetura de demonstração.
 - [Roadmap de Data Engineering e AWS](docs/aws-roadmap.md): critérios e evolução planejada para Data Lake, batch, streaming e observabilidade.

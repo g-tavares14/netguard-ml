@@ -1,3 +1,9 @@
 # Testes
 
-Este diretório receberá testes automatizados à medida que o pipeline for implementado. Ainda não há código Python ou comportamento definido para testar.
+Cobre a leitura de dataset (`DatasetSource`) e a inspeção de schema. Os casos usam fixtures em `conftest.py` e **não** precisam dos parquet oficiais.
+
+```bash
+uv run pytest tests/ -q
+```
+
+Como executar o restante do projeto: [docs/como-executar.md](../docs/como-executar.md).
