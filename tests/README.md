@@ -5,3 +5,5 @@ Cobre a leitura de dataset (`DatasetSource`) e a inspeção de schema. Os casos 
 ```bash
 uv run pytest tests/ -q
 ```
+
+Como executar o restante do projeto: [docs/como-executar.md](../docs/como-executar.md).

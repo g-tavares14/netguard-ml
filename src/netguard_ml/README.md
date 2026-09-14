@@ -4,4 +4,4 @@ Pacote do pipeline. O dataset oficial é o CICIoT2023 subsample em `data/raw/cic
 
 Hoje existem a leitura dos splits (`DatasetSource`), a inspeção do schema das features e a EDA em `netguard_ml.data`. Ainda não há preprocessing de modelo, treino nem contrato de inferência.
 
-Achados da EDA: [docs/eda.md](../../docs/eda.md).
+Como executar: [docs/como-executar.md](../../docs/como-executar.md). Achados da EDA: [docs/eda.md](../../docs/eda.md).

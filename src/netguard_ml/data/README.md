@@ -12,3 +12,5 @@ uv run python scripts/prepare_dataset.py
 uv run python -m netguard_ml.data.main
 uv run python -m netguard_ml.data.eda --on train --leakage
 ```
+
+Como baixar os arquivos e rodar o restante: [docs/como-executar.md](../../../docs/como-executar.md).
