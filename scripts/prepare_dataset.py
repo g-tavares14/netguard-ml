@@ -1,9 +1,9 @@
 """Baixa o CICIoT2023 do HuggingFace e gera um recorte local para EDA/treino rápido."""
 
-from pathlib import Path
 import urllib.request
+from pathlib import Path
 
-import pandas as pd
+import polars as pl
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw" / "ciciot2023-neto-subsample"
@@ -44,23 +44,19 @@ class CiciotDataset:
         if not origem.exists():
             raise FileNotFoundError(f"rode download() antes: falta {origem}")
 
-        df = pd.read_parquet(origem)
-        partes = []
-        for _, grupo in df.groupby("Label"):
-            n = min(len(grupo), max_por_label)
-            partes.append(grupo.sample(n=n, random_state=seed))
+        df = pl.read_parquet(origem)
+        partes = [
+            grupo.sample(n=min(len(grupo), max_por_label), seed=seed, shuffle=True)
+            for _, grupo in df.group_by("Label")
+        ]
 
-        recorte = (
-            pd.concat(partes, ignore_index=True)
-            .sample(frac=1, random_state=seed)
-            .reset_index(drop=True)
-        )
+        recorte = pl.concat(partes).sample(fraction=1.0, seed=seed, shuffle=True)
 
         SUBSET_DIR.mkdir(parents=True, exist_ok=True)
         saida = SUBSET_DIR / "ciciot2023_subset.parquet"
-        recorte.to_parquet(saida, index=False)
+        recorte.write_parquet(saida)
         print(f"recorte: {len(recorte)} linhas -> {saida}")
-        print(recorte["Label"].value_counts().to_string())
+        print(recorte["Label"].value_counts().sort("count", descending=True))
 
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ Use estes três arquivos. Não reembaralhar o conjunto inteiro para criar outro 
 Para baixar de novo e gerar um recorte de EDA (só a partir do `train`):
 
 ```bash
-python scripts/prepare_dataset.py
+uv run python scripts/prepare_dataset.py
 ```
 
 O recorte vai para `data/subset/ciciot2023_subset.parquet` (até 2000 linhas por `Label`, seed 42). Validação e teste oficiais não são misturados nesse arquivo.
